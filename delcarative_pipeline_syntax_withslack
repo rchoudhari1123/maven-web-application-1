@@ -1,0 +1,88 @@
+pipeline {
+agent any
+
+tools{
+maven "maven"
+}
+
+/*triggers {
+  cron '* * * * *'
+}
+*/
+options {
+  buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
+  timestamps()
+    
+}
+
+stages{
+
+stage("checkout"){
+steps{
+git branch: 'development', credentialsId: '23a3003e-9245-4db0-9670-2953261914be',
+ url: 'https://github.com/rchoudhari1123/maven-web-application-1.git'
+}
+}
+
+stage("build"){
+steps{
+sh "mvn clean package"
+}
+}
+
+stage("executesonarreport"){
+steps{
+sh "mvn clean sonar:sonar"
+}
+}
+
+stage("uploadartifactnexus"){
+steps{
+sh "mvn clean deploy"
+}
+}
+
+stage("uploadtotomacat"){
+steps{
+sshagent(['8bd44c19-2056-4d60-a18f-40c9afd2801a']) {
+  sh "scp target/maven-web-application.war ec2-user@172.31.1.238:/opt/apache-tomcat-9.0.75/webapps"
+}
+}
+}
+}
+
+post {
+  success {
+     sendSlackNotifications(currentBuild.result)
+  }
+  failure {
+     sendSlackNotifications(currentBuild.result)
+  }
+}
+
+}
+
+def sendSlackNotifications(String buildStatus = 'STARTED') {
+  // build status of null means successful
+  buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+  // Default values
+  def colorName = 'RED'
+  def colorCode = '#FF0000'
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+  def summary = "${subject} (${env.BUILD_URL})"
+
+  // Override default values based on build status
+  if (buildStatus == 'STARTED') {
+    color = 'ORANGE'
+    colorCode = '#FFA500'
+  } else if (buildStatus == 'SUCCESSFUL') {
+    color = 'GREEN'
+    colorCode = '#00FF00'
+  } else {
+    color = 'RED'
+    colorCode = '#FF0000'
+  }
+  // Send notifications
+  slackSend (color: colorCode, message: summary,channel: 'devopsproject')
+}
