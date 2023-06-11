@@ -55,7 +55,7 @@ sshagent(['b84f7df5-46ce-4d3f-9514-6da75466bb5f']) {
 }
 }
 
-/*
+
 post {
   success {
      sendSlackNotifications(currentBuild.result)
