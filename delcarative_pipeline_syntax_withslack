@@ -51,6 +51,7 @@ sshagent(['b84f7df5-46ce-4d3f-9514-6da75466bb5f']) {
 }
 }
 
+/*
 post {
   success {
      sendSlackNotifications(currentBuild.result)
@@ -59,9 +60,9 @@ post {
      sendSlackNotifications(currentBuild.result)
   }
 }
-
+*/
 }
-
+/*
 def sendSlackNotifications(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
@@ -86,3 +87,4 @@ def sendSlackNotifications(String buildStatus = 'STARTED') {
   // Send notifications
   slackSend (color: colorCode, message: summary,channel: 'devopsproject')
 }
+*/
