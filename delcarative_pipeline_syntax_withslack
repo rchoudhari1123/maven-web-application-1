@@ -8,18 +8,22 @@ maven "maven"
 /*triggers {
   cron '* * * * *'
 }
-*/
+
 options {
   buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
   timestamps()
     
 }
+parameters {
+  choice choices: ['master', 'development', 'stage', 'uat'], description: 'pipeline choices  ', name: 'My_Choises'
+}
+
 
 stages{
 
 stage("checkout"){
 steps{
-git branch: 'development', credentialsId: '23a3003e-9245-4db0-9670-2953261914be',
+git branch: "${params.My_Choises}", credentialsId: '23a3003e-9245-4db0-9670-2953261914be',
  url: 'https://github.com/rchoudhari1123/maven-web-application-1.git'
 }
 }
@@ -60,9 +64,9 @@ post {
      sendSlackNotifications(currentBuild.result)
   }
 }
-*/
+
 }
-/*
+
 def sendSlackNotifications(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESSFUL'
@@ -87,4 +91,4 @@ def sendSlackNotifications(String buildStatus = 'STARTED') {
   // Send notifications
   slackSend (color: colorCode, message: summary,channel: 'devopsproject')
 }
-*/
+
