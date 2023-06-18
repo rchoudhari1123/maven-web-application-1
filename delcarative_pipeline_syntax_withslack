@@ -33,13 +33,13 @@ steps{
 sh "mvn clean package"
 }
 }
-
+/*
 stage("executesonarreport"){
 steps{
 sh "mvn clean sonar:sonar package"
 }
 }
-
+*/
 stage("uploadartifactnexus"){
 steps{
 sh "mvn clean deploy"
