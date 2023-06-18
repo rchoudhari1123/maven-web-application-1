@@ -8,7 +8,7 @@ maven "maven"
 /*triggers {
   cron '* * * * *'
 }
-
+*/
 options {
   buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '5', numToKeepStr: '5')
   timestamps()
@@ -92,5 +92,4 @@ def sendSlackNotifications(String buildStatus = 'STARTED') {
   slackSend (color: colorCode, message: summary,channel: 'devopsproject')
 }
 
-}
-}
+
