@@ -108,6 +108,12 @@
 	      <name>Mithun Technologies Snapshot Nexus Repository </name>
 	      <url>http://65.0.203.243:8081/repository/phoenix_snapshot/</url>
 	    </snapshotRepository>
+
+		<repository>
+	      <id>nexus</id>
+	      <name>phoenix_doc</name>
+	      <url>http://65.0.203.243:8081/repository/phoenix_doc/</url>	
+	    </repository>
 	    
 	</distributionManagement>
 	
